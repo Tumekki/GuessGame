@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author tuukkapartanen
- *
- */
-module guessGame {
-}
