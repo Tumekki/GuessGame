@@ -13,47 +13,67 @@ public class GuessGameGUI extends JFrame {
 	private JTextField textGuess;
 	private JLabel labelOutput;
 	private int theNumber;
-	
+	private int attempts;
+
 	public void checkGuess() {
 		String userGuess = textGuess.getText();
 		String message = "";
-		int guess = Integer.parseInt(userGuess);
-		
-		if(guess < theNumber) {
-            message = guess + " is too low. Try again.";
-		} else if(guess > theNumber) {
-            message = guess + " is too high. Try again.";
-		} else {
-            message = guess + " is correct. You win!";
-		} labelOutput.setText(message);
+		try {
+			int guess = Integer.parseInt(userGuess);
+			
+
+			if(guess < theNumber) {
+				message = guess + " is too low. Try again.";
+				attempts++;
+			} else if(guess > theNumber) {
+				message = guess + " is too high. Try again.";
+				attempts++;
+			} else {
+				message = guess + " is correct. You win in " + attempts + " turns! Play again!";
+				newGame();
+			}
+		} catch(Exception e) {
+			message = "Enter a whole number between 1 and 100.";
+		}
+		finally {
+			labelOutput.setText(message);
+			textGuess.requestFocus();
+			textGuess.selectAll();
+		}
 	}
-	
+
 	public void newGame() {
 		theNumber = (int)(Math.random() * 100 + 1);
+		attempts = 0;
 	}
-	
+
 	public GuessGameGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Tuukka's Guessing Game");
 		getContentPane().setLayout(null);
-		
+
 		JLabel lblTuukkasGuessingGame = new JLabel("Guess The Number");
 		lblTuukkasGuessingGame.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblTuukkasGuessingGame.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTuukkasGuessingGame.setBounds(117, 40, 215, 16);
 		getContentPane().add(lblTuukkasGuessingGame);
-		
+
 		JLabel lblEnterANumber = new JLabel("Enter a number between 1 and 100:");
 		lblEnterANumber.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEnterANumber.setBounds(64, 96, 236, 16);
 		getContentPane().add(lblEnterANumber);
-		
+
 		textGuess = new JTextField();
+		textGuess.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				checkGuess();
+			}
+		});
 		textGuess.setHorizontalAlignment(SwingConstants.RIGHT);
 		textGuess.setBounds(300, 91, 50, 26);
 		getContentPane().add(textGuess);
 		textGuess.setColumns(10);
-		
+
 		JButton btnGuess = new JButton("Guess!");
 		btnGuess.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -62,7 +82,7 @@ public class GuessGameGUI extends JFrame {
 		});
 		btnGuess.setBounds(166, 152, 117, 29);
 		getContentPane().add(btnGuess);
-		
+
 		labelOutput = new JLabel("Enter a number above and click Guess!");
 		labelOutput.setHorizontalAlignment(SwingConstants.CENTER);
 		labelOutput.setBounds(81, 221, 291, 16);
